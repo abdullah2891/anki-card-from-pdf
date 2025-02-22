@@ -20,9 +20,10 @@ def generate_prompt(prompot_dict: dict, data) -> str:
 
 
 def run_llm_model(prompt: str) -> str:
+    model = "llama3.2"
     
     # Command to run with shell features (e.g., command substitution)
-    command = f'ollama run llama3.2 "{prompt}"'
+    command = f'ollama run {model} "{prompt}"'
 
     # Execute the command, capturing the output
     result = subprocess.run(command, shell=True, capture_output=True, text=True)
@@ -55,7 +56,6 @@ def main():
     
 if __name__ == "__main__":
     prompt = generate_prompt(anki_card_prompt, sample_input_page)
-    print(prompt)
     generate = run_llm_model(prompt)
     print(generate)
 
