@@ -4,9 +4,10 @@ import PyPDF2
 from data.anki_card_prompt import anki_card_prompt
 from data.sample_pdf_page import sample_input_page
 import subprocess
+import multiprocessing
 
 
-def generate_prompt(prompot_dict: dict, data) -> str:
+def generate_prompt(prompot_dict,data) -> str:
     '''
     helps to build effective prompt
 
@@ -30,7 +31,6 @@ def run_llm_model(prompt: str) -> str:
 
     # Check if the command ran successfully
     if result.returncode == 0:
-        print("Command output:")
         return result.stdout
     else:
         raise ValueError(result.stderr)
@@ -40,7 +40,7 @@ def run_llm_model(prompt: str) -> str:
 def parse_pdf(fh) -> Generator:
     with fh as f:
         reader = PyPDF2.PdfReader(f)
-        return [page for page in reader.pages if page.extract_text()]
+        return [generate_prompt(anki_card_prompt, page.extract_text()) for page in reader.pages if page.extract_text()]
 
 
 def main():
@@ -49,13 +49,18 @@ def main():
     args = parser.parse_args()
     file_handler = args.file
 
-    pdf_file_generator = parse_pdf(file_handler)
+    pdf_pages = parse_pdf(file_handler)
+    
+    with multiprocessing.Pool(processes=4) as pool:
+        results = pool.imap(run_llm_model, pdf_pages)
 
-    for page in pdf_file_generator:
-        print(page.extract_text())
+        for r in results:
+            print(r)
+
     
 if __name__ == "__main__":
-    prompt = generate_prompt(anki_card_prompt, sample_input_page)
-    generate = run_llm_model(prompt)
-    print(generate)
-
+    #    prompt = generate_prompt(sample_input_page)
+    #    generate = run_llm_model(prompt)
+    #    print(generate)
+    #
+    main()
