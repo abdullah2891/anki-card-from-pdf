@@ -2,10 +2,11 @@ from typing import Generator
 import argparse
 import PyPDF2
 from data.anki_card_prompt import anki_card_prompt
+from data.sample_pdf_page import sample_input_page
 import subprocess
 
 
-def generate_prompt(prompot_dict: dict) -> str:
+def generate_prompt(prompot_dict: dict, data) -> str:
     '''
     helps to build effective prompt
 
@@ -15,7 +16,7 @@ def generate_prompt(prompot_dict: dict) -> str:
     warnings = prompot_dict['warnings']
 
 
-    return f" \n {goal} \n {return_format} \n {warnings}" 
+    return f" \n {goal} \n {return_format} \n {warnings} \n {data}" 
 
 
 def run_llm_model(prompt: str) -> str:
@@ -53,7 +54,8 @@ def main():
         print(page.extract_text())
     
 if __name__ == "__main__":
-    prompt = generate_prompt(anki_card_prompt)
+    prompt = generate_prompt(anki_card_prompt, sample_input_page)
+    print(prompt)
     generate = run_llm_model(prompt)
     print(generate)
 
