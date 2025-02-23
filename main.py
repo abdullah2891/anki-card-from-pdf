@@ -33,7 +33,7 @@ def run_llm_model(prompt: str) -> str:
     if result.returncode == 0:
         return result.stdout
     else:
-        raise ValueError(result.stderr)
+        pass
 
 
 
