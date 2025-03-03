@@ -75,15 +75,69 @@ def parse_pdf(fh) -> Generator:
         reader = PyPDF2.PdfReader(f)
         return [generate_prompt(anki_card_prompt, page.extract_text()) for page in reader.pages if page.extract_text()]
 
+def parse_page_range(range_str: str) -> dict:
+    '''
+        returns list start and end list 
+        [
+            {
+                'start': 20,
+                'end':  30
+            }.
+            {
+                'start': 50,
+                'end': 60
+            }
+        ]
+    '''
+    pages = []
+    for part in range_str.split(','):
+        if '-' in part:
+            [start, end] = part.split('-')
+            pages.append({
+                'start': int(start), 
+                'end': int(end)
+            })
+        else:
+            pages.add({
+                'start': int(part),
+                'end': int(part) + 1
+            })
+
+    return sorted(pages, key = lambda obj: obj['start'])
+
 
 def main():
     parser = argparse.ArgumentParser(description="Process a PDF file input.")
     parser.add_argument("file", type=argparse.FileType('rb'), help="Path to the input PDF file")
+    parser.add_argument(
+        "--range",
+        type=str,
+        help="Range of pages to process (e.g., '1-3,5,7-9')",
+        default=None
+    )
+
     args = parser.parse_args()
+
     file_handler = args.file
 
     pdf_pages = parse_pdf(file_handler)
-    
+
+
+
+    if args.range:
+        selected_pages = parse_page_range(args.range)
+        partial_list_pdf_pages = []
+
+        for range in selected_pages:
+            start = range['start']
+            end = range['end']
+            partial_list_pdf_pages += pdf_pages[start : end]
+
+        pdf_pages = partial_list_pdf_pages
+
+    else:
+        print("Processing entire PDF.")
+        
     with multiprocessing.Pool(processes=4) as pool:
         results = pool.imap(run_llm_model, pdf_pages)
 
@@ -93,8 +147,4 @@ def main():
 
     
 if __name__ == "__main__":
-    #    prompt = generate_prompt(sample_input_page)
-    #    generate = run_llm_model(prompt)
-    #    print(generate)
-    #
     main()
