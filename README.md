@@ -20,7 +20,6 @@ Requirements
 * Python 3.8+
 * PyPDF2 library (`pip install PyPDF2`)
 * Argparse library (`pip install argparse`)
-* Multiprocessing library (`pip install multiprocessing`)
 
 Usage
 -----
