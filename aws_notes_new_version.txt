@@ -1,0 +1,8 @@
+What is EBS Snapshot Archive?|EBS Snapshot
+What does an EBS Snapshot Archive do?|Move a Snapshot to an ”archive tier” that is 75% cheaper
+How long does it take to restore from an archive?|Takes within 24 to 72 hours for restoring the archive
+What is the purpose of the Recycle Bin for EBS Snapshots?|Recycle Bin for EBS Snapshots
+Can you recover deleted snapshots using the Recycle Bin?|Setup rules to retain deleted snapshots so you can recover them after an accidental deletion
+How long can a snapshot be retained in the system?|Specify retention (from 1 day to 1 year)
+What is Fast Snapshot Restore (FSR)?|Fast Snapshot Restore (FSR)
+
