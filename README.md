@@ -20,7 +20,6 @@ Requirements
 * Python 3.8+
 * PyPDF2 library (`pip install PyPDF2`)
 * Argparse library (`pip install argparse`)
-* Multiprocessing library (`pip install multiprocessing`)
 
 Usage
 -----
@@ -55,7 +54,7 @@ This script is released under the MIT License.
 
 MIT License
 
-Copyright (c) [Year] [Author]
+Copyright (c) [2025] [Abdullah Rahman]
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
