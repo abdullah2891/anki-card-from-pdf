@@ -1,6 +1,6 @@
 import re
 import PyPDF2
-from typing import Generator
+from typing import Generator, List, Dict
 from data.anki_card_prompt import anki_card_prompt
 
 def parse_answer_question(text):
@@ -49,32 +49,39 @@ def parse_pdf(fh) -> Generator:
         reader = PyPDF2.PdfReader(f)
         return [generate_prompt(anki_card_prompt, page.extract_text()) for page in reader.pages if page.extract_text()]
 
-def parse_page_range(range_str: str) -> dict:
+def parse_page_range(range_str: str) -> List[Dict[str, int]]:
     '''
-        returns list start and end list 
-        [
-            {
-                'start': 20,
-                'end':  30
-            }.
-            {
-                'start': 50,
-                'end': 60
-            }
-        ]
+    returns list start and end list 
+    [
+        {
+            'start': 20,
+            'end':  30
+        },
+        {
+            'start': 50,
+            'end': 60
+        }
+    ]
     '''
     pages = []
     for part in range_str.split(','):
         if '-' in part:
-            [start, end] = part.split('-')
-            pages.append({
-                'start': int(start), 
-                'end': int(end)
-            })
+            try:
+                start, end = map(int, part.split('-'))
+                pages.append({
+                    'start': start, 
+                    'end': end
+                })
+            except ValueError:
+                raise ValueError(f"Invalid range format: {part}. Start and end must be integers.")
         else:
-            pages.add({
-                'start': int(part),
-                'end': int(part) + 1
-            })
+            try:
+                page = int(part)
+                pages.append({
+                    'start': page,
+                    'end': page + 1
+                })
+            except ValueError:
+                raise ValueError(f"Invalid page number: {part}. Must be an integer.")
 
-    return sorted(pages, key = lambda obj: obj['start'])
+    return sorted(pages, key=lambda obj: obj['start'])
