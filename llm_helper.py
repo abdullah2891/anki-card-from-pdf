@@ -1,8 +1,9 @@
 import subprocess
 
+
 def run_llm_model(prompt: str) -> str:
     model = "llama3.2"
-    
+
     # Command to run with shell features (e.g., command substitution)
     command = f'ollama run {model} "{prompt}"'
 

@@ -7,5 +7,3 @@ Amazon S3•SNS can send to Kinesis and therefore we can have the following solu
 
 © Stephane MaarekNOT FOR DISTRIBUTION © Stephane Maarek www.datacumulus.com
 """
-
-
